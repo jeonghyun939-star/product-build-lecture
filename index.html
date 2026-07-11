@@ -38,8 +38,11 @@
     margin: 0;
     min-height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 20px;
+    padding: 20px 0;
     background: var(--bg-outer);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     transition: background 0.3s ease;
@@ -149,6 +152,53 @@
   }
   button:hover { background: var(--btn-bg-hover); }
   button:active { transform: scale(0.98); }
+  .form-container { text-align: left; }
+  .form-container h2 {
+    font-size: 18px;
+    color: var(--text-title);
+    margin: 0 0 4px;
+    text-align: center;
+    transition: color 0.3s ease;
+  }
+  .form-container p.sub { text-align: center; }
+  .field {
+    margin-bottom: 14px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--label-color);
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+  }
+  .field input,
+  .field textarea {
+    width: 100%;
+    border: 1px solid var(--toggle-border);
+    background: var(--row-bg);
+    color: var(--text-title);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  .field textarea { min-height: 90px; }
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--btn-bg);
+  }
+  .form-status {
+    margin-top: 12px;
+    font-size: 13px;
+    text-align: center;
+    min-height: 18px;
+  }
+  .form-status.success { color: #4caf82; }
+  .form-status.error { color: #ff7272; }
 </style>
 </head>
 <body>
@@ -159,6 +209,31 @@
   <p class="sub">버튼을 눌러 행운의 번호 5세트를 뽑아보세요</p>
   <div class="sets" id="sets"></div>
   <button onclick="generateLotto()">번호 생성하기</button>
+</div>
+
+<div class="container form-container">
+  <h2>🤝 제휴 문의</h2>
+  <p class="sub">아래 내용을 남겨주시면 검토 후 회신드리겠습니다</p>
+  <form id="partnerForm" action="https://formspree.io/f/mykrgzae" method="POST">
+    <div class="field">
+      <label for="name">이름</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div class="field">
+      <label for="email">이메일</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="field">
+      <label for="company">회사 / 서비스명</label>
+      <input type="text" id="company" name="company">
+    </div>
+    <div class="field">
+      <label for="message">문의 내용</label>
+      <textarea id="message" name="message" required></textarea>
+    </div>
+    <button type="submit" id="partnerSubmit">문의 보내기</button>
+    <div class="form-status" id="partnerStatus"></div>
+  </form>
 </div>
 
 <script>
@@ -227,6 +302,39 @@ function generateLotto() {
 }
 
 generateLotto();
+
+const partnerForm = document.getElementById('partnerForm');
+const partnerStatus = document.getElementById('partnerStatus');
+const partnerSubmit = document.getElementById('partnerSubmit');
+
+partnerForm.addEventListener('submit', async function (e) {
+  e.preventDefault();
+  partnerSubmit.disabled = true;
+  partnerStatus.textContent = '전송 중...';
+  partnerStatus.className = 'form-status';
+
+  try {
+    const response = await fetch(partnerForm.action, {
+      method: 'POST',
+      body: new FormData(partnerForm),
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if (response.ok) {
+      partnerStatus.textContent = '문의가 정상적으로 접수되었습니다. 감사합니다!';
+      partnerStatus.className = 'form-status success';
+      partnerForm.reset();
+    } else {
+      partnerStatus.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해주세요.';
+      partnerStatus.className = 'form-status error';
+    }
+  } catch (err) {
+    partnerStatus.textContent = '네트워크 오류로 전송하지 못했습니다.';
+    partnerStatus.className = 'form-status error';
+  } finally {
+    partnerSubmit.disabled = false;
+  }
+});
 </script>
 
 </body>
