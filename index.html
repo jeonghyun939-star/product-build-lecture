@@ -153,7 +153,8 @@
   button:hover { background: var(--btn-bg-hover); }
   button:active { transform: scale(0.98); }
   .form-container { text-align: left; }
-  .form-container h2 {
+  .form-container h2,
+  .comments-container h2 {
     font-size: 18px;
     color: var(--text-title);
     margin: 0 0 4px;
@@ -161,6 +162,11 @@
     transition: color 0.3s ease;
   }
   .form-container p.sub { text-align: center; }
+  .comments-container {
+    width: 100%;
+    max-width: 420px;
+  }
+  .comments-container h2 { margin-bottom: 16px; }
   .field {
     margin-bottom: 14px;
   }
@@ -235,6 +241,26 @@
     <div class="form-status" id="partnerStatus"></div>
   </form>
 </div>
+
+<div class="container comments-container">
+  <h2>💬 댓글</h2>
+  <div id="disqus_thread"></div>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+<script>
+var disqus_config = function () {
+  this.page.url = window.location.href;
+  this.page.identifier = window.location.pathname;
+};
+
+(function() {
+  var d = document, s = d.createElement('script');
+  s.src = 'https://hello-disqus-1.disqus.com/embed.js';
+  s.setAttribute('data-timestamp', +new Date());
+  (d.head || d.body).appendChild(s);
+})();
+</script>
 
 <script>
 function applyTheme(theme) {
