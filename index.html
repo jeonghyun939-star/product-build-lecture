@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <title>로또 번호 생성기</title>
 <style>
   :root {
@@ -42,10 +43,21 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
-    padding: 20px 0;
+    padding: 20px;
     background: var(--bg-outer);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     transition: background 0.3s ease;
+  }
+  @media (min-width: 1300px) {
+    body {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+    .container,
+    .comments-container {
+      width: 420px;
+      flex-shrink: 0;
+    }
   }
   .container {
     position: relative;
